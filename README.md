@@ -13,8 +13,8 @@ rest_forward.py - ryu app, processes REST API requests to make changes in flow t
 4) set OpenFlow13 for the OpenFlow version:
  > ovs-vsctl set Bridge s1 protocols=OpenFlow13
 5) on c0 run tcp_port.py and port.py:
- > python ./tcp_port.py
- > python ./port.py
+ > python ./tcp_port.py ,
+ > python ./port.py -
    enter port values
 6) check flow table:
  > curl –X GET http://localhost:8080/forward/rules/0000000000000001
