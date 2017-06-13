@@ -5,7 +5,7 @@ rest_forward.py - ryu app, processes REST API requests to make changes in flow t
 
 
 1) start rest_forward.py app: 
- > sudo ryu-manager rest_forward.py ofctl_rest.py 
+ > sudo ryu-manager rest_forward.py 
 2) on Mininet run a network of 2 hosts, 1 switch 
  > sudo mn –controller remote -x
 3) start xterm for c0:
