@@ -17,7 +17,5 @@ def main():
     h = input("Enter output port: ")
     rest(z,h)
     
-    
-
 if __name__ == '__main__':
     main()
