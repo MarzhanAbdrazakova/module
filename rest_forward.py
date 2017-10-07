@@ -102,8 +102,8 @@ REST_OUTPUT = 'OUTPUT'
 STATUS_FLOW_PRIORITY = ofproto_v1_3_parser.UINT16_MAX
 ARP_FLOW_PRIORITY = ofproto_v1_3_parser.UINT16_MAX - 1
 LOG_FLOW_PRIORITY = 0
-ACL_FLOW_PRIORITY_MIN = LOG_FLOW_PRIORITY + 1
-ACL_FLOW_PRIORITY_MAX = ofproto_v1_3_parser.UINT16_MAX - 2
+FWD_FLOW_PRIORITY_MIN = LOG_FLOW_PRIORITY + 1
+FWD_FLOW_PRIORITY_MAX = ofproto_v1_3_parser.UINT16_MAX - 2
 
 VLANID_NONE = 0
 VLANID_MIN = 2
@@ -300,8 +300,6 @@ class ForwardController(ControllerBase):
             ForwardController._LOGGER.info('dpid=%s: Forwarding module is disconnected.',
                                             dpid_lib.dpid_to_str(dp.id))
 
-      
-
   
     # GET /forward/rules/{switchid}
     def get_rules(self, req, switchid, **_kwargs):
@@ -405,8 +403,6 @@ class ForwardController(ControllerBase):
     def packet_in_handler(msg):
         pkt = packet.Packet(msg.data)
         dpid_str = dpid_lib.dpid_to_str(msg.datapath.id)
-        ForwardController._LOGGER.info('dpid=%s: Blocked packet = %s',
-                                        dpid_str, pkt)
 
 
 class Forward(object):
@@ -462,7 +458,6 @@ class Forward(object):
             return {REST_SWITCHID: switch_id,
                     key: value}
         return _rest_command
-
      
     @rest_command
     def set_rule(self, rest, waiters, vlan_id):
@@ -475,15 +470,15 @@ class Forward(object):
 
     def _set_rule(self, cookie, rest, waiters, vlan_id):
         match_value = rest[REST_MATCH]
-        priority = int(rest.get(REST_PRIORITY, ACL_FLOW_PRIORITY_MIN))
+        priority = int(rest.get(REST_PRIORITY, FWD_FLOW_PRIORITY_MIN))
 
-        if (priority < ACL_FLOW_PRIORITY_MIN
-                or ACL_FLOW_PRIORITY_MAX < priority):
+        if (priority < FWD_FLOW_PRIORITY_MIN
+                or FWD_FLOW_PRIORITY_MAX < priority):
             raise ValueError('Invalid priority value. Set [%d-%d]'
-                             % (ACL_FLOW_PRIORITY_MIN, ACL_FLOW_PRIORITY_MAX))
+                             % (FWD_FLOW_PRIORITY_MIN, FWD_FLOW_PRIORITY_MAX))
 
         if vlan_id:
-            rest[REST_DL_VLAN] = vlan_id
+            match_value[REST_DL_VLAN] = vlan_id
         
         match = Match.to_openflow(match_value)
         
@@ -853,5 +848,3 @@ class Action(object):
             action = {REST_ACTION: 'Unknown action type.'}
         
         return action
-
-    

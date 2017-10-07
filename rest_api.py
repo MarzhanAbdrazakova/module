@@ -22,7 +22,7 @@ while True:
         print table.text
 
     def delete_rule():
-        os.system(" curl -X DELETE -d \'{\"rule_id\": %s}\' http://localhost:8080/forward/rules/0000000000000001 " % rid)
+        os.system(" curl -X DELETE -d \'{\"rule_id\": % s}\' % s " % (rid, url))
   
     def tcp_inputs():
         in_port = raw_input("In_port: ")
@@ -47,3 +47,5 @@ while True:
             tcp_inputs()
         elif c=="3":
             delete_rule()
+    
+         
