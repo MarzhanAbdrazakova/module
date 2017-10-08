@@ -21,13 +21,13 @@ def process():
        	elif c=="2":
             tcp_inputs()
         elif c=="3":
-            delete_rule()
+            delete_rule(rid)
 
 def get_table():
     table = requests.get(url)
     print table.text
 
-def delete_rule():
+def delete_rule(rid):
     os.system(" curl -X DELETE -d \'{\"rule_id\": % s}\' % s " % (rid, url))
   
 def tcp_inputs():
