@@ -16,12 +16,9 @@ from ryu.lib.packet import packet
 from ryu.lib import dpid as dpid_lib
 from ryu.lib import ofctl_utils
 
-
-
 simple_switch_instance_name = 'restswitch'
 rules_default = 'channels.json'
 rules = 'channels.json'
-
 
 
 class ForwardRest(simple_switch_13.SimpleSwitch13):
@@ -57,7 +54,6 @@ class ForwardRest(simple_switch_13.SimpleSwitch13):
                                     match=match, instructions=inst)
         datapath.send_msg(mod)
 
-   
     
 class ForwardController(ControllerBase):
 
@@ -89,7 +85,6 @@ class ForwardController(ControllerBase):
             self.channels = {}
         self.r = []
     
-     
     def delete_flow(self, dp, flows):
         if flows == "":
             return
@@ -98,7 +93,6 @@ class ForwardController(ControllerBase):
             flow = f
             mod_flow_entry(dp, flow, cmd)
         self.r = []   
-
 
     def set_flows(self, dp, f): 
 
@@ -126,7 +120,6 @@ class ForwardController(ControllerBase):
             raise ValueError('Invalid rule parameter.')
         self.r.append(flow)
         self.delete_flow(dp,self.r)
-
 
     @route('rules', '/rules', methods=['GET'])
     def get_conf_handler(self, req, **kwargs):
