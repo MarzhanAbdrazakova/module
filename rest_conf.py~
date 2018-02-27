@@ -151,6 +151,7 @@ class ForwardController(ControllerBase):
  
     _OFS_LIST = ForwardOfsList()
     _LOGGER = None
+    #_Forward = Forward()
 
     def __init__(self, req, link, data, **config):
         super(ForwardController, self).__init__(req, link, data, **config)
@@ -274,7 +275,7 @@ class ForwardController(ControllerBase):
             vid = VLANID_NONE 
         try:
             dps = self._OFS_LIST.get_ofs(switchid) #returns dict {switchid : Forward(switchid)}
-            #vid = ForwardController._conv_toint_vlanid(vlan_id) 
+            #vid = ForwardController._conv_toint_vlanid(vlan_id) #integer value of the vlan_id 
         except ValueError as message:
             return Response(status=400, body=str(message))
 
@@ -377,7 +378,18 @@ class ForwardController(ControllerBase):
                 return Response(status=400, body=str(message))
 
         body = json.dumps(msgs)
-        return Response(content_type='application/json', body=body) 
+        return Response(content_type='application/json', body=body)
+
+    @staticmethod
+    def _conv_toint_vlanid(vlan_id): #convert into integer type and checks if the value is acceptible
+        if vlan_id != 'all':
+            vlan_id = int(vlan_id)
+            if (vlan_id != VLANID_NONE and
+                    (vlan_id < VLANID_MIN or VLANID_MAX < vlan_id)):
+                msg = 'Invalid {vlan_id} value. Set [%d-%d]' % (VLANID_MIN,
+                                                                VLANID_MAX)
+                raise ValueError(msg)
+        return vlan_id    
 
     @staticmethod
     def packet_in_handler(msg):

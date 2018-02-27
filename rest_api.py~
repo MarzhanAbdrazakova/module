@@ -34,17 +34,17 @@ def tcp_inputs():
     in_port = raw_input("In_port: ")
     out_port = raw_input("Output port: ")
     ip_dest = raw_input("IP of destination host: ")
-    #vlan_id = raw_input("vlan: ")
+    vlan_id = raw_input("vlan: ")
     tcp_from = raw_input("TCP port forward from: ")
     tcp_to = raw_input("TCP port forward to: ")
     prior = raw_input("Priority: ")
-    tcp_ports(dpid, prior,ip_dest, in_port, out_port, tcp_from, tcp_to)
+    tcp_ports(dpid, prior,ip_dest, vlan_id, in_port, out_port, tcp_from, tcp_to)
 
-def tcp_ports(dpid,prior,ip_dest,in_port, out_port, tcp_from, tcp_to):
-    payload = { "dpid": dpid, "priority":prior, "match": { "nw_dst": ip_dest, "nw_proto": "TCP", "eth_type": 2048, "tcp_dst": tcp_from, "in_port": in_port}, "actions":  { "tcp_dst": tcp_to, "OUTPUT":out_port}  }
+def tcp_ports(dpid,prior,ip_dest,vlan_id, in_port, out_port, tcp_from, tcp_to):
+    payload = { "dpid": dpid, "priority":prior, "match": { "nw_dst": ip_dest, "dl_vlan": vlan_id,"nw_proto": "TCP", "eth_type": 2048, "tcp_dst": tcp_from, "in_port": in_port}, "actions":  { "tcp_dst": tcp_to, "OUTPUT":out_port}  }
     r=requests.post(url, json.dumps(payload))
 
-    payload = { "dpid": dpid, "priority":prior, "match": { "nw_src": ip_dest, "nw_proto": "TCP", "eth_type": 2048, "tcp_src": tcp_to, "in_port": out_port}, "actions": { "tcp_src": tcp_from, "OUTPUT":in_port} }
+    payload = { "dpid": dpid, "priority":prior, "match": { "nw_src": ip_dest,"dl_vlan": vlan_id, "nw_proto": "TCP", "eth_type": 2048, "tcp_src": tcp_to, "in_port": out_port}, "actions": { "tcp_src": tcp_from, "OUTPUT":in_port} }
     r=requests.post(url, json.dumps(payload))
 
 if __name__ == '__main__':
