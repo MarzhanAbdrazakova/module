@@ -459,8 +459,8 @@ class Forward(object):
                    {"type":"SET_FIELD", "field": "tcp_dst", "value": int(f["tp"])},
                    {"type":"SET_FIELD", "field": "eth_dst", "value":f["dl"]},
                    {"type":"OUTPUT", "port": int(f["oport"])}]
-        if vlan_id:
-            match["dl_vlan"]=vlan_id
+        if "vlan_id" in dst.keys():
+            match["dl_vlan"]=f["vlan_id"]
         flow = self._to_of_flow(cookie=cookie, priority=1000,
                                 match=match, actions=actions) 
         try:
@@ -474,8 +474,8 @@ class Forward(object):
                    {"type":"SET_FIELD", "field": "tcp_src", "value": int(dst["tp"])}, 
                    {"type":"SET_FIELD", "field": "eth_src", "value":dst["dl"]}, 
                    {"type":"OUTPUT", "port": int(f["iport"])}]
-        if vlan_id:
-            match["dl_vlan"]=vlan_id
+        if "vlan_id" in f.keys():
+            match["dl_vlan"]=f["vlan_id"]
         flow = self._to_of_flow(cookie=cookie, priority=1000,
                                 match=match, actions=actions) 
         try:
