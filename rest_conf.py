@@ -141,7 +141,16 @@ class ForwardController(ControllerBase):
 
         body = json.dumps({'result': 'Rules are activated.'})
         return Response(content_type='application/json', body=body)
+    
+    @route('channel', '/channel/all', methods = ['GET'])
+    def get_channels(self, req, **kwargs):
+        body = json.dumps({'channels': self.channels})
+        return Response(content_type='application/json', body=body)
 
+    @route('ovs', '/ovs/all', methods = ['GET'])
+    def get_ovs(self, req, **kwargs):
+        body = json.dumps({'ovs': self.ovs})
+        return Response(content_type='application/json', body=body)
 
     @route('channel', '/channel', methods = ['POST'])
     def set_channel(self, req, **kwargs):
